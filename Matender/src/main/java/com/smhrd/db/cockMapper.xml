@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.smhrd.db.cockMapper">
+	<!-- 전체 레시피 조회 -->
+	<select id="inquiry" resultType="CockVO">
+		SELECT * FROM RECIPE
+	</select>
+	
+	<!-- 좋아요 순위  -->
+	<select id="like" resultType="LikeVO">
+		SELECT A."recipeNum", COUNT(B."recipeNum") as like_count
+		FROM RECIPE A
+		LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		GROUP BY A."recipeNum"
+		ORDER BY "recipeNum"
+	</select>
+	
+	<!-- 전체 레시피 및 이미지, 댓글, 좋아요, 북마크 조회 -->
+	<select id="joinInquiry" resultType="AllVO">
+		SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		       B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		FROM RECIPE A
+		LEFT JOIN (
+		    SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		    FROM TB_IMG
+		    GROUP BY "recipeNum"
+		) B ON A."recipeNum" = B."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		    FROM RECIPE A
+		    LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) C ON A."recipeNum" = C."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) D ON A."recipeNum" = D."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) E ON A."recipeNum" = E."recipeNum"
+		ORDER BY A."recipeNum"
+	</select>
+	<!-- 일반레시피만 -->
+	<select id="joinInquiry2" resultType="AllVO">
+		SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		       B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		FROM RECIPE A
+		LEFT JOIN (
+		    SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		    FROM TB_IMG
+		    GROUP BY "recipeNum"
+		) B ON A."recipeNum" = B."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		    FROM RECIPE A
+		    LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) C ON A."recipeNum" = C."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) D ON A."recipeNum" = D."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) E ON A."recipeNum" = E."recipeNum"
+		WHERE A."recipeCode" = 'CH001'
+		ORDER BY A."recipeNum"
+	</select>
+	
+	<!-- 도전레시피만 -->
+	<select id="joinInquiry3" resultType="AllVO">
+		SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		       B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		FROM RECIPE A
+		LEFT JOIN (
+		    SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		    FROM TB_IMG
+		    GROUP BY "recipeNum"
+		) B ON A."recipeNum" = B."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		    FROM RECIPE A
+		    LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) C ON A."recipeNum" = C."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) D ON A."recipeNum" = D."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) E ON A."recipeNum" = E."recipeNum"
+		WHERE A."recipeCode" = 'CH002'
+		ORDER BY A."recipeNum"
+	</select>
+
+	<!-- 상세 레시피 및 이미지, 댓글, 좋아요, 북마크 조회 -->
+	<select id="recipeInfo" resultType="AllVO">
+	SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+	       B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+	FROM RECIPE A
+	LEFT JOIN (
+	    SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+	    FROM TB_IMG
+	    GROUP BY "recipeNum"
+	) B ON A."recipeNum" = B."recipeNum"
+	LEFT JOIN (
+	    SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+	    FROM RECIPE A
+	    LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+	    GROUP BY A."recipeNum"
+	) C ON A."recipeNum" = C."recipeNum"
+	LEFT JOIN (
+	    SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+	    FROM RECIPE A
+	    LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+	    GROUP BY A."recipeNum"
+	) D ON A."recipeNum" = D."recipeNum"
+	LEFT JOIN (
+	    SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+	    FROM RECIPE A
+	    LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+	    GROUP BY A."recipeNum"
+	) E ON A."recipeNum" = E."recipeNum"
+	WHERE A."recipeNum" = #{recipeNum}
+	ORDER BY A."recipeNum"
+	</select>
+	
+	<!-- 좋아요 수 업데이트 -->
+	<insert id="recipeLikePlus" parameterType="Member_likeVO">
+		INSERT INTO MEMBER_LIKE VALUES(#{nickName}, #{recipeNum})
+	</insert>
+		
+	
+	<!-- 인기 순위 조회 -->
+	<select id="joinRank" resultType="AllVO">
+		SELECT *
+		FROM (
+		    SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		           B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN (
+		        SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		        FROM TB_IMG
+		        GROUP BY "recipeNum"
+		    ) B ON A."recipeNum" = B."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		        FROM RECIPE A
+		        LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) C ON A."recipeNum" = C."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		        FROM RECIPE A
+		        LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) D ON A."recipeNum" = D."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		        FROM RECIPE A
+		        LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) E ON A."recipeNum" = E."recipeNum"
+		    WHERE "recipeCode" = 'CH001'
+		    ORDER BY C.LIKE_COUNT DESC
+		)
+		WHERE ROWNUM &#60;= 10
+	</select>
+	
+	<select id="joinRank2" resultType="AllVO">
+		SELECT *
+		FROM (
+		    SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		           B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN (
+		        SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		        FROM TB_IMG
+		        GROUP BY "recipeNum"
+		    ) B ON A."recipeNum" = B."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		        FROM RECIPE A
+		        LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) C ON A."recipeNum" = C."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		        FROM RECIPE A
+		        LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) D ON A."recipeNum" = D."recipeNum"
+		    LEFT JOIN (
+		        SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		        FROM RECIPE A
+		        LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		        GROUP BY A."recipeNum"
+		    ) E ON A."recipeNum" = E."recipeNum"
+		    WHERE "recipeCode" = 'CH002'
+		    ORDER BY C.LIKE_COUNT DESC
+		)
+		WHERE ROWNUM &#60;= 10
+	</select>
+	
+	<!-- similRecipe -->
+		<!-- 전체 레시피 및 이미지, 댓글, 좋아요, 북마크 조회 -->
+	<select id="similRecipe" resultType="AllVO">
+		SELECT A."recipeNum", A."recipeCode", A."recipeName", A."cockAlc", A."cockBase", A."cockInfo", A."cockRec", A."nickName",
+		       B."imgPath", C.LIKE_COUNT, D.BOOKMARK_COUNT, E.REPLE_COUNT
+		FROM RECIPE A
+		LEFT JOIN (
+		    SELECT "recipeNum", MIN("imgPath") AS "imgPath"
+		    FROM TB_IMG
+		    GROUP BY "recipeNum"
+		) B ON A."recipeNum" = B."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS like_count
+		    FROM RECIPE A
+		    LEFT JOIN MEMBER_LIKE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) C ON A."recipeNum" = C."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS BOOKMARK_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN BOOKMARK B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) D ON A."recipeNum" = D."recipeNum"
+		LEFT JOIN (
+		    SELECT A."recipeNum", COUNT(B."recipeNum") AS REPLE_COUNT
+		    FROM RECIPE A
+		    LEFT JOIN RECIPE_REPLE B ON A."recipeNum" = B."recipeNum"
+		    GROUP BY A."recipeNum"
+		) E ON A."recipeNum" = E."recipeNum"
+		WHERE A."cockBase" = #{base}
+		ORDER BY C.LIKE_COUNT
+	</select>
+	
+	
+	<!-- bookmark -->
+	<select id="nickNameCheck" parameterType="Member_likeVO" resultType="Member_likeVO">
+		select * from BOOKMARK WHERE "nickName" = #{nickName} AND "recipeNum" = #{recipeNum}
+	</select>
+	
+	<delete id="delBookmark" parameterType="Member_likeVO">
+		DELETE BOOKMARK WHERE "nickName" = #{nickName} AND "recipeNum" = #{recipeNum}
+	</delete>
+			
+	<insert id="insertBookmark" parameterType="Member_likeVO">
+		INSERT INTO BOOKMARK VALUES(#{nickName}, #{recipeNum})
+	</insert>
+	
+	<!-- 레시피 작성 -->
+	<insert id="recipeWrite" parameterType="CockVO">
+		INSERT INTO RECIPE VALUES('R'||RECIPE_SEQ.nextval, 'CH002', #{recipeName}, #{cockAlc}, #{cockBase}, #{cockInfo}, #{cockRec}, #{nickName})
+	</insert>
+		
+	<!-- 레시피 번호 불러오기 -->
+	<select id="selectRecipe" parameterType="CockVO" resultType="CockVO">
+		 SELECT * FROM RECIPE WHERE "nickName" = #{nickName} AND "recipeName" = #{recipeName} AND "recipeCode" = 'CH002' AND "cockInfo"=#{cockInfo}
+	</select>
+	
+		<!-- 이미지 테이블에 인설트 -->	
+	<insert id="recipeWriteImg" parameterType="ImgVO">
+		INSERT INTO TB_IMG VALUES('IMG'||IMG_SEQ.nextval, null, #{recipeNum}, #{filename}, SYSDATE)
+	</insert>	
+</mapper>

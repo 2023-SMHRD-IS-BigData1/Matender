@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="com/smhrd/db/db.properties" />
+	
+	<typeAliases>
+		<typeAlias type="com.smhrd.model.MemberVO" alias="MemberVO"/>
+		<typeAlias type="com.smhrd.model.BoardVO" alias="BoardVO"/>
+		<typeAlias type="com.smhrd.model.ImgVO" alias="ImgVO"/>
+		<typeAlias type="com.smhrd.model.CockVO" alias="CockVO"/>
+		<typeAlias type="com.smhrd.model.Boared_RepleVO" alias="Boared_RepleVO"/>
+		<typeAlias type="com.smhrd.model.LikeVO" alias="LikeVO"/>
+		<typeAlias type="com.smhrd.model.AllVO" alias="AllVO"/>
+		<typeAlias type="com.smhrd.model.Member_likeVO" alias="Member_likeVO"/>
+		<typeAlias type="com.smhrd.model.IngredientVO" alias="IngredientVO"/>
+	</typeAliases>	
+	
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- sql문들을 정의해주는 mapper.xml을 계속해서 만들건데 어디에 있는지 경로를 지정해주는 태그 -->
+	<mappers>
+		<mapper resource="com/smhrd/db/memberMapper.xml" />
+		<mapper resource="com/smhrd/db/boardMapper.xml" />
+		<mapper resource="com/smhrd/db/cockMapper.xml" />
+		<mapper resource="com/smhrd/db/boardRepleMapper.xml" />
+		<mapper resource="com/smhrd/db/ingredientMapper.xml" />
+	</mappers>
+</configuration>

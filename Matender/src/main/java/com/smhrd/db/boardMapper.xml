@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.db.boardMapper">
+
+	<!-- 게시글 작성 -->
+	<insert id="boardWrite" parameterType="BoardVO">
+		INSERT INTO BOARD VALUES('B'||BOARD_SEQ.nextval, #{boardTitle}, '커뮤니티', SYSDATE, 0, #{boardText}, #{nickName})
+	</insert>
+	
+		<!-- 작성자 이름으로 보드 번호 불러오기 -->
+	<select id="selectBoard" parameterType="BoardVO" resultType="BoardVO">
+		 SELECT * FROM BOARD WHERE "nickName" = #{nickName} AND "boardTitle" = #{boardTitle} AND "boardText" = #{boardText}
+	</select>
+		
+	<!-- 이미지 테이블에 인설트 -->	
+	<insert id="boardWriteImg" parameterType="ImgVO">
+		INSERT INTO TB_IMG VALUES('IMG'||IMG_SEQ.nextval, #{boardNum}, null, #{filename}, SYSDATE)
+	</insert>	
+
+	
+	<!-- 게시글 전체 조회 -->
+	<select id="WebBoard" resultType="BoardVO">
+		 SELECT * FROM BOARD WHERE "boardCate" = '커뮤니티' ORDER BY "boardDate"
+	</select>
+	
+	<!-- 게시글 작성자 조회 -->
+	<select id="boardSerch" resultType="BoardVO">
+		 SELECT * FROM BOARD WHERE "boardCate" = '커뮤니티' AND "nickName" = #{nickName} ORDER BY "boardDate"
+	</select>
+	
+	<!-- 게시글 상세페이지 -->
+	<select id="showText" resultType="BoardVO" >
+		SELECT * FROM BOARD WHERE "boardNum" = #{boardNum}
+	</select>
+	
+	<!-- 이미지 조회 -->
+	<select id="showImg" resultType="ImgVO" >
+		SELECT * FROM TB_IMG WHERE "boardNum" = #{boardNum}
+	</select>
+	<!-- 이미지 조회2 -->
+	<select id="showImgRecipe" resultType="ImgVO" >
+		SELECT * FROM TB_IMG WHERE "recipeNum" = #{recipeNum}
+	</select>
+	
+	<!-- 게시글 및 이미지 삭제 -->
+	<delete id="deleteBoard" >
+		DELETE BOARD WHERE "boardNum" = #{boardNum}		
+	</delete>
+	<delete id="deleteIMG" >
+		DELETE TB_IMG WHERE "boardNum" = #{boardNum}
+	</delete>
+	
+	<!-- 추천 수 업데이트 -->
+	<update id="boardGoodPlus">
+		UPDATE BOARD SET "boardGood" = "boardGood" + 1 WHERE "boardNum" = #{boardNum} 
+	</update>
+	
+</mapper>
